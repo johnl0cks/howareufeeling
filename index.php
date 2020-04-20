@@ -74,6 +74,7 @@ $symptoms=symptoms::get();
 			}
 			
 			.popup_box{
+				position: relative;
 				display: table;
 				box-sizing: border-box;
 				padding: 0.5em;
@@ -86,10 +87,19 @@ $symptoms=symptoms::get();
 				border-color: hsl(205,62%,31%);
 			}
 
-			.popup>div>button{
+			.popup_box>button{
 				width: 100%;
 				margin-top: 0.5em;
 				font-size: 200%;
+			}
+			
+			.popup_box>.close{
+				position: absolute;
+			    right: 0;
+				top: 0;
+				font-size: 150%;
+				line-height: 0.7em;
+				cursor: pointer;
 			}
 			
 			div.panel{
@@ -228,9 +238,35 @@ $symptoms=symptoms::get();
 				);
 			}
 			
-			function submit(){
-				var gathered_data={};
-				gathered_data.symptom={};
+			function submit(data,type){
+				var settings={
+					url:'ajax/submit_feel.php/'+type,
+					data: JSON.stringify(data),
+					dataType: 'json',
+					method:'POST',
+					processData:false,
+				}
+				$.ajax(settings);
+			}
+			
+			function submit_feel_good(){
+				submit({},'submit_feel_good');
+			}
+
+			function submit_zip(){
+				var data={};
+				data.zip=$('#zip_popup_value').val();
+				data.symptoms={};
+				submit(data,'submit_zip');
+			}
+
+			function submit_geolocation(geolocation){
+				var data={};
+				data.latitude=geolocation.latitude;
+				data.longitude=geolocation.longitude;
+				data.accuracy=geolocation.accuracy;
+				data.symptoms={};
+				submit(data,'submit_geolocation');
 			}
 		</script>
 
@@ -271,7 +307,7 @@ $symptoms=symptoms::get();
 				});
 
 				$('#feeling_good').click(function(){
-					popup("Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque urna sapien, lacinia ornare diam vel, finibus vestibulum augue. Vestibulum imperdiet gravida neque quis tempor. In hac habitasse platea dictumst. Nam eu vulputate magna. Etiam metus nisi, rhoncus ac dolor at, fermentum varius dolor. Cras volutpat semper purus, et accumsan lorem rhoncus non. Nam sollicitudin est non viverra pharetra. Sed a libero odio. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Nulla id commodo orci. Aliquam et gravida erat. Donec volutpat viverra libero nec vulputate. Sed rhoncus id ex in venenatis. Fusce magna lorem, rutrum et massa non, malesuada bibendum elit. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Orci varius natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus.");
+					submit_feel_good();
 				});
 				
 				$('#feeling_bad').click(function(){
@@ -321,6 +357,7 @@ $symptoms=symptoms::get();
 		</div>
 		<div class="popup" id="zip_popup" style="display:none">
 			<div class="popup_box" id="zip_popup_box" style="width: 50%">
+				<div class="close">&times;</div>
 				<div>Enter your ZIP Code</div>
 				<input id="zip_popup_value" name="zip" type="text" inputmode="numeric" pattern="^\d{5}$" placeholder="00000" required>
 				<button disabled>Done</button>
@@ -343,6 +380,11 @@ $symptoms=symptoms::get();
 				});
 				
 				$('#zip_popup button').click(function(){
+					submit_zip();
+					$('#zip_popup').fadeOut(250);
+				});
+
+				$('#zip_popup .close').click(function(){
 					$('#zip_popup').fadeOut(250);
 				});
 			</script>
