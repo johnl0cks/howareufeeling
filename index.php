@@ -41,8 +41,8 @@ $already_submitted=feels::ip_already_submitted_today($_SERVER['REMOTE_ADDR']);
 					complete: complete
 					
 				}
-				setTimeout(function(){$.ajax(settings);},1000);
-					
+				//setTimeout(function(){$.ajax(settings);},1000);
+				$.ajax(settings);
 			}
 		</script>
 		<div class="popup" id="message_popup" style="display:none">
@@ -135,7 +135,7 @@ $already_submitted=feels::ip_already_submitted_today($_SERVER['REMOTE_ADDR']);
 			<div id="symptoms_holder" style="display: none">
 			<?php
 				require_once('models/symptoms.php');
-				foreach($symptoms as $symptom)
+				foreach(symptoms::$symptoms as $symptom)
 					echo '<button class="symptom" data-symptom_id="',htmlentities($symptom->column_name),'">',htmlentities($symptom->name),'</button>';
 			?>
 			</div>
@@ -208,10 +208,8 @@ $already_submitted=feels::ip_already_submitted_today($_SERVER['REMOTE_ADDR']);
 				$('#zip_popup button').click(function(){
 					$('#zip_popup').fadeOut(250);
 					waiting_popup_show();
-					var zip=$('#zip_popup_value').val();
-
 					var data={};
-					data.zip=zip;
+					data.zip_code=$('#zip_popup_value').val();
 					data.symptoms=symptoms_data();
 					submit(data,'submit_zip',function(){
 						waiting_popup_hide(function(){

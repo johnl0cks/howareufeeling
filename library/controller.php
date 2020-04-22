@@ -47,6 +47,12 @@ class controller_base{
 				$got_type='int';
 			}
 		}
+		if($wanted_type==='number'){
+			if($got_type==='int')
+				return $value;
+			if($got_type==='double')
+				return $value;
+		}
 		if($wanted_type!==$got_type){
 			if($name!==null)
 				throw new \Exception("bad parameter type for \"$name\" wanted \"$wanted_type\" got \"".gettype($value)."\"");

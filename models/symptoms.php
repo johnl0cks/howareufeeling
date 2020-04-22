@@ -1,5 +1,9 @@
 <?php
-$symptoms=array (
+class symptoms{
+public static $symptoms;
+public static $symptom_map;
+};
+symptoms::$symptoms=array (
   0 => 
   (object) array(
      'symptom_id' => '1',
@@ -211,7 +215,7 @@ $symptoms=array (
      'column_name' => 'nosebleed',
   ),
 );
-$symptom_map=array (
+symptoms::$symptom_map=array (
   'fever' => 0,
   'cough' => 1,
   'tiredness' => 2,
