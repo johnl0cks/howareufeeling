@@ -135,7 +135,6 @@ $already_submitted=feels::ip_already_submitted_today($_SERVER['REMOTE_ADDR']);
 			<div id="symptoms_holder" style="display: none">
 			<?php
 				require_once('models/symptoms.php');
-				$symptoms=symptoms::get();
 				foreach($symptoms as $symptom)
 					echo '<button class="symptom" data-symptom_id="',htmlentities($symptom->column_name),'">',htmlentities($symptom->name),'</button>';
 			?>
