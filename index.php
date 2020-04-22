@@ -115,7 +115,7 @@ $already_submitted=feels::ip_already_submitted_today($_SERVER['REMOTE_ADDR']);
 
 					$('#feeling_good').click(function(){
 						waiting_popup_show();
-						submit({},'submit_feel_good',function(){
+						submit({},'submit_good',function(){
 							waiting_popup_hide(function(){
 								$('#panel_finished').trigger('open');
 							});
@@ -169,7 +169,14 @@ $already_submitted=feels::ip_already_submitted_today($_SERVER['REMOTE_ADDR']);
 				});
 
 				$('#symptoms_done').click(function(){
-					$('#panel_location').trigger('open');
+					waiting_popup_show();
+					var data={};
+					data.symptoms=symptoms_data();
+					submit(data,'submit_bad',function(){
+						waiting_popup_hide(function(){
+							$('#panel_finished').trigger('open');
+						});
+					});
 				});
 
 				function symptoms_data(){
@@ -179,103 +186,6 @@ $already_submitted=feels::ip_already_submitted_today($_SERVER['REMOTE_ADDR']);
 					});
 					return data;
 				}
-			</script>
-		</div>
-		<div class="popup" id="zip_popup" style="display:none">
-			<div class="popup_box" id="zip_popup_box" style="width: 50%">
-				<div class="close">&times;</div>
-				<div>Enter your ZIP Code</div>
-				<input id="zip_popup_value" name="zip" type="text" inputmode="numeric" pattern="^\d{5}$" placeholder="00000" required>
-				<button disabled>Done</button>
-			</div>
-			<script>
-				'use strict';
-				function zip_popup(){
-					var popup=$('#zip_popup');
-					var popup_box=$('#zip_popup_box');
-					popup.show();
-					popup_box.css('width','');
-					var area=popup_box.width()*popup_box.height();
-					popup_box.width(Math.sqrt(area));
-					popup.hide().fadeIn(250);
-				}
-				
-				$('#zip_popup_value').on('change keyup keydown',function(){
-					console.log(this.validity.valid);
-					$('#zip_popup button').prop('disabled',!this.validity.valid);
-				});
-				
-				$('#zip_popup button').click(function(){
-					$('#zip_popup').fadeOut(250);
-					waiting_popup_show();
-					var data={};
-					data.zip_code=$('#zip_popup_value').val();
-					data.symptoms=symptoms_data();
-					submit(data,'submit_zip',function(){
-						waiting_popup_hide(function(){
-							$('#panel_finished').trigger('open');
-						});
-					});
-				});
-
-				$('#zip_popup .close').click(function(){
-					$('#zip_popup').fadeOut(250);
-				});
-			</script>
-		</div>
-		<div class="panel" id="panel_location">
-			<h1>Let us know the area where you where you live</h1>
-			<h2>We don't want your address just the general area</h2>
-			<button class="major" id="use_geolocation">Use My Location</button>
-			<button class="major" id="use_zip">Enter Zip Code</button>
-			<script>
-				'use strict';
-				$('#panel_location').on('open',function(){
-					$('#use_geolocation').hide();
-					if(navigator && navigator.geolocation){
-						if(navigator.permissions && navigator.permissions.query){
-							navigator.permissions.query({name: 'geolocation'}).then(function(status){
-								if(status.state!='denied')
-									$('#use_geolocation').show();
-							});
-						}else
-							$('#use_geolocation').show();
-					}
-
-					slide_in_panel(this);
-				});
-
-				$('#use_zip').click(function(){
-					zip_popup();
-				});
-				
-				$('#use_geolocation').click(function(){
-					function success(geolocation) {
-						var data={};
-						data.latitude=geolocation.coords.latitude;
-						data.longitude=geolocation.coords.longitude;
-						data.accuracy=geolocation.coords.accuracy;
-						data.symptoms=symptoms_data();
-						submit(data,'submit_geolocation',function(){
-							waiting_popup_hide(function(){
-								$('#panel_finished').trigger('open');
-							});
-						});
-					}				
-					function error(error){
-						waiting_popup_hide();
-						if(error.code==1){
-							popup("If you would rather not use your device location we get that. But to understand where people are sick we do need a general location for you. Please enter a zip code to continue");
-							$('#use_geolocation').hide();
-						}else{
-							console.log(error);
-							popup("There was an error getting your location. Please choose one of the other available options");
-							$('#use_geolocation').hide();
-						}
-					}
-					waiting_popup_show();
-					navigator.geolocation.getCurrentPosition(success,error);
-				});
 			</script>
 		</div>
 		<div class="panel" id="panel_finished">
