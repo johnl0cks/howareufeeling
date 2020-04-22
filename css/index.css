@@ -1,0 +1,223 @@
+body{
+	font-family: Verdana;
+	font-size: 14pt;
+	color: #EEE;
+	padding: 1em 0;
+	margin: 0;
+	text-align: center;
+	background-color: #454545;
+	overflow-x: hidden;
+}
+
+h1{
+	margin: 0.25em;
+}
+
+h2{
+	font-size: 80%;
+	font-weight: normal;
+	font-style: italic;
+	margin: 0 0 1em;
+}
+
+button, a.button{
+	position: relative;
+	background-color: hsl(206,62%,40%);
+	padding: 0.5em;
+	margin: 0;
+	color: inherit;
+	box-sizing: border-box;
+	border: 4px solid hsl(205,62%,31%);
+	cursor: pointer;
+	outline: none;
+	line-height: 1.2em;
+	font-size: 100%;
+	display: inline-block;
+	text-decoration: none;
+}
+
+button:active, a.button:active{
+	z-index: 100;
+	transform: scale(1.1);
+}
+
+button:disabled{
+	background-color: hsl(206,31%,40%);
+	border-color: hsl(205,31%,31%);
+	color: #DDD;
+}
+
+input[type="text"]{
+	font-size: 200%;
+	width: 3.5em;
+	height: 1em;
+	text-align: left;
+	padding: 0.75em 0.25em 0.65em;
+	color: inherit;
+	background-color: hsl(206,40%,40%);
+	border: 4px solid hsl(205,62%,31%);
+}
+
+.popup{
+	position: fixed;
+	left: 0;
+	top: 0;
+	right: 0;
+	bottom: 0;
+	z-index: 1000;
+	background-color: rgba(0,0,0,0.5);
+}
+
+.popup_box{
+	position: relative;
+	display: table;
+	box-sizing: border-box;
+	padding: 0.5em;
+	border-width: 4px;
+	max-width: 100%;
+	margin: 6em auto 0 auto;
+	text-align: center;
+	background-color: hsl(206,62%,35%);
+	border-style: solid ;
+	border-color: hsl(205,62%,31%);
+}
+
+.popup_box>button{
+	width: 100%;
+	margin-top: 0.5em;
+	font-size: 200%;
+}
+
+.popup_box>.close{
+	position: absolute;
+	right: 0;
+	top: 0;
+	font-size: 150%;
+	line-height: 0.7em;
+	cursor: pointer;
+}
+
+#waiting_popup_box{
+	width: 6em;
+	height: 6em;
+	animation-name: example;
+	animation-duration: 4s;
+	animation-iteration-count: infinite;
+	animation-timing-function: linear;
+}
+
+@keyframes example {
+  from {transform: rotateZ(0deg);}
+  to {transform: rotateZ(360deg);}
+}
+
+div.panel{
+	display: none;
+	box-sizing: border-box;
+	padding: 0 1em;
+	width: 100%;
+	position: absolute;
+	left: 0%;
+}
+
+button.feel{
+	background-color: #276FA5;
+	background-image: url('../images/thumbs.svg');
+	background-size: 70%;
+	background-repeat: no-repeat;
+	background-position: 50% 33%;
+	margin-bottom: 1vh;
+	border-radius: 50%;
+	box-sizing: border-box;
+	font-size: 0;
+	line-height: 0;
+}
+
+button.feel:active{
+	background-size: 77%;
+	background-position: 50% 19%;
+}
+
+#feeling_bad{
+	transform: scale(-1);
+}
+
+#feeling_bad:active{
+	transform: scale(-1.1);
+}
+
+button.major{
+	width: 100%;
+	font-size: 200%;
+	margin: 0 0 1em;
+	padding: 0.5em;
+	border-radius: 0.1em;
+}
+
+button.major:active{
+	font-size: 250%;
+	padding: calc(0.17em + 5px);
+}
+
+#symptoms{
+	width: 100%;
+	column-gap: 1em;
+	margin-bottom: 1em;
+}
+
+button.symptom{
+	display: block;
+	width: 100%;
+	padding: 0.5em 0.5em 0.5em 2em;
+	margin: 1em 0;
+
+	text-align: left;
+	break-inside: avoid;
+	position: relative;
+	cursor: pointer;
+	border-radius: 2px;
+}
+
+button.symptom::before{
+	display: block;
+	box-sizing: border-box;
+	width: 1em;
+	height: 1em;
+	margin-top: -0.5em;
+	position: absolute;
+	left: 0.5em;
+	top: 50%;
+	border: solid 0.2em #DDD;
+	border-radius: 50%;
+	content: "";
+}
+
+button.symptom:active,button.symptom.selected:active{
+	background-color: hsl(206,62%,35%);
+	border-color: hsl(205,46%,41%);
+}
+
+button.symptom:active::before{
+	background-color: #6589A3;
+}
+
+button.symptom:first-child{
+	margin-top: 0;
+}
+
+button.symptom:last-child{
+	margin-bottom: 0;
+}
+
+button.symptom.selected{
+	background-color: hsl(206,62%,30%);
+	border-color: hsl(205,31%,50%);
+}
+
+button.symptom.selected::before{
+	background-color: #FFF;
+}
+
+#zip_popup input{
+	margin-top: 0.5em;
+}

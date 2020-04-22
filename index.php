@@ -1,227 +1,19 @@
 <?php
-require_once('models/symptoms.php');
-$symptoms=symptoms::get();
+require_once(dirname(__FILE__).'/models/feels.php');
+$already_submitted=feels::ip_already_submitted_today($_SERVER['REMOTE_ADDR']);
 ?><html>
 	<head>
-		<title>How Are U Feeling?</title>
-		<style>
-			body{
-				font-family: Verdana;
-				font-size: 14pt;
-				color: #EEE;
-				padding: 1em 0;
-				margin: 0;
-				text-align: center;
-				background-color: #454545;
-				overflow-x: hidden;
-			}
-			
-			h1{
-				margin: 0.25em;
-			}
-			
-			h2{
-				font-size: 80%;
-				font-weight: normal;
-				font-style: italic;
-				margin: 0 0 1em;
-			}
-			
-			button{
-				position: relative;
-				background-color: hsl(206,62%,40%);
-				padding: 0.5em;
-				margin: 0;
-				color: inherit;
-				box-sizing: border-box;
-				border: 4px solid hsl(205,62%,31%);
-				cursor: pointer;
-				outline: none;
-				line-height: 1.2em;
-				font-size: 100%;
-			}
-			
-			button:active{
-				z-index: 100;
-				transform: scale(1.1);
-			}
-
-			button:disabled{
-				background-color: hsl(206,31%,40%);
-				border-color: hsl(205,31%,31%);
-				color: #DDD;
-			}
-			
-			input[type="text"]{
-				font-size: 200%;
-				width: 3.5em;
-				height: 1em;
-				text-align: left;
-				padding: 0.75em 0.25em 0.65em;
-				color: inherit;
-				background-color: hsl(206,40%,40%);
-				border: 4px solid hsl(205,62%,31%);
-			}
-			
-			.popup{
-				position: fixed;
-				left: 0;
-				top: 0;
-				right: 0;
-				bottom: 0;
-				z-index: 1000;
-				background-color: rgba(0,0,0,0.5);
-			}
-			
-			.popup_box{
-				position: relative;
-				display: table;
-				box-sizing: border-box;
-				padding: 0.5em;
-				border-width: 4px;
-				max-width: 100%;
-				margin: 6em auto 0 auto;
-				text-align: center;
-				background-color: hsl(206,62%,35%);
-				border-style: solid ;
-				border-color: hsl(205,62%,31%);
-			}
-
-			.popup_box>button{
-				width: 100%;
-				margin-top: 0.5em;
-				font-size: 200%;
-			}
-			
-			.popup_box>.close{
-				position: absolute;
-			    right: 0;
-				top: 0;
-				font-size: 150%;
-				line-height: 0.7em;
-				cursor: pointer;
-			}
-			
-			div.panel{
-				display: none;
-				box-sizing: border-box;
-				padding: 0 1em;
-				width: 100%;
-				position: absolute;
-				left: 0%;
-			}
-			
-			button.feeling{
-				width: 40%;
-				padding-bottom: 40%;
-				background-color: #276FA5;
-				background-image: url('images/thumbs.svg');
-				background-size: 70%;
-				background-repeat: no-repeat;
-				background-position: 50% 33%;
-				border-radius: 50%;
-				box-sizing: border-box;
-				font-size: 0;
-				line-height: 0;
-			}
-
-			button.feeling:active{
-				background-size: 77%;
-				background-position: 50% 19%;
-			}
-
-			#feeling_bad{
-				transform: scale(-1);
-			}
-
-			#feeling_bad:active{
-				transform: scale(-1.1);
-			}
-			
-			button.major{
-				width: 100%;
-				font-size: 200%;
-				margin: 0 0 1em;
-				padding: 0.5em;
-				border-radius: 0.1em;
-			}
-
-			button.major:active{
-				font-size: 250%;
-				padding: calc(0.17em + 5px);
-			}
-			
-			#symptoms{
-				width: 100%;
-				column-gap: 1em;
-				margin-bottom: 1em;
-			}
-			
-			button.symptom{
-				display: block;
-				width: 100%;
-				padding: 0.5em 0.5em 0.5em 2em;
-				margin: 1em 0;
-
-				text-align: left;
-				break-inside: avoid;
-				position: relative;
-				cursor: pointer;
-				border-radius: 2px;
-			}
-
-			button.symptom::before{
-				display: block;
-				box-sizing: border-box;
-				width: 1em;
-				height: 1em;
-				margin-top: -0.5em;
-				position: absolute;
-				left: 0.5em;
-				top: 50%;
-				border: solid 0.2em #DDD;
-				border-radius: 50%;
-				content: "";
-			}
-
-			button.symptom:active,button.symptom.selected:active{
-				background-color: hsl(206,62%,35%);
-				border-color: hsl(205,46%,41%);
-			}
-			
-			button.symptom:active::before{
-				background-color: #6589A3;
-			}
-			
-			button.symptom:first-child{
-				margin-top: 0;
-			}
-
-			button.symptom:last-child{
-				margin-bottom: 0;
-			}
-			
-			button.symptom.selected{
-				background-color: hsl(206,62%,30%);
-				border-color: hsl(205,31%,50%);
-			}
-			
-			button.symptom.selected::before{
-				background-color: #FFF;
-			}
-			
-			#zip_popup input{
-				margin-top: 0.5em;
-			}
-		</style>
+		<title>how are u feeling?</title>
+		<link rel="stylesheet" type="text/css" href="css/index.css">
 		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
 	</head>
 	<body>
+<?php if(!$already_submitted):?>
 		<script>
 			'use strict';
 
 			$(function(){
-				$('#panel_feeling').trigger('open');
+				$('#panel_feel').trigger('open');
 			});
 
 			function slide_in_panel(wanted_panel_element){
@@ -238,40 +30,23 @@ $symptoms=symptoms::get();
 				);
 			}
 			
-			function submit(data,type){
+			function submit(data,type,complete){
+				console.log(data);
 				var settings={
-					url:'ajax/submit_feel.php/'+type,
+					url:'ajax/feels.php/'+type,
 					data: JSON.stringify(data),
 					dataType: 'json',
 					method:'POST',
 					processData:false,
+					complete: complete
+					
 				}
-				$.ajax(settings);
-			}
-			
-			function submit_feel_good(){
-				submit({},'submit_feel_good');
-			}
-
-			function submit_zip(){
-				var data={};
-				data.zip=$('#zip_popup_value').val();
-				data.symptoms={};
-				submit(data,'submit_zip');
-			}
-
-			function submit_geolocation(geolocation){
-				var data={};
-				data.latitude=geolocation.latitude;
-				data.longitude=geolocation.longitude;
-				data.accuracy=geolocation.accuracy;
-				data.symptoms={};
-				submit(data,'submit_geolocation');
+				setTimeout(function(){$.ajax(settings);},1000);
+					
 			}
 		</script>
-
 		<div class="popup" id="message_popup" style="display:none">
-			<div class="popup_box" id="message_popup_box" style="width: 50%">
+			<div class="popup_box" id="message_popup_box">
 				<div id="message_popup_text">
 				</div>
 				<button>OK</button>
@@ -294,25 +69,64 @@ $symptoms=symptoms::get();
 				});
 			</script>
 		</div>
-		<div class="panel" id="panel_feeling">
-			<h1>How are U feeling?</h1>
-			<h2>Help track disease and learn about its spread</h2>
-			<button class="feeling" id="feeling_good">Good</button>
-			<button class="feeling" id="feeling_bad">Bad</button>
+		<div class="popup" id="waiting_popup" style="display:none">
+			<div class="popup_box" id="waiting_popup_box">
+				<img src="images/thumbs.svg"/>
+			</div>
 			<script>
 				'use strict';
-				$('#panel_feeling').on('open',function(){
+				function waiting_popup_show(){
+					$('#waiting_popup').fadeIn(250);
+				}
+				function waiting_popup_hide(finished){
+					$('#waiting_popup').stop();
+					$('#waiting_popup').fadeOut(250,finished);
+				}
+			</script>
+		</div>
+		<div class="panel" id="panel_feel">
+			<h1>how are u feeling?</h1>
+			<h2>Help track disease and learn about its spread</h2>
+			<div id="feels">
+				<button class="feel" id="feeling_good">Good</button>
+				<button class="feel" id="feeling_bad">Bad</button>
+			</div>
+			<script>
+				'use strict';
+				$('#panel_feel').on('open',function(){
 					$('div.panel').hide();
+					//we randomize the order of the feel buttons to reduce polling bias
+					if(Math.random()<0.5)
+						$('#feels').append($('#feeling_good').remove());
 					$(this).show();
+					
+					$(window,this).resize(function(){
+						var panel=$('#panel_feel:visible');
+						if(panel.length){
+							var area_width=$('#panel_feel').innerWidth();
+							var area_height=window.innerHeight-$('#feels').offset().top;
+							var button_size=area_height*0.9/2;
+							button_size=Math.max(button_size,area_width*0.8/2);
+							button_size=Math.min(button_size,area_height*0.9);
+							$('button.feel').outerWidth(button_size).outerHeight(button_size);
+						}
+					});
+					$(this).resize();
+
+					$('#feeling_good').click(function(){
+						waiting_popup_show();
+						submit({},'submit_feel_good',function(){
+							waiting_popup_hide(function(){
+								$('#panel_finished').trigger('open');
+							});
+						});
+					});
+					
+					$('#feeling_bad').click(function(){
+						$('#panel_symptoms').trigger('open');
+					});
 				});
 
-				$('#feeling_good').click(function(){
-					submit_feel_good();
-				});
-				
-				$('#feeling_bad').click(function(){
-					$('#panel_symptoms').trigger('open');
-				});
 			</script>
 		</div>
 		<div class="panel" id="panel_symptoms">
@@ -320,6 +134,8 @@ $symptoms=symptoms::get();
 			<h2>Don't worry we don't know (or care) who you are we just record your symptoms</h2>
 			<div id="symptoms_holder" style="display: none">
 			<?php
+				require_once('models/symptoms.php');
+				$symptoms=symptoms::get();
 				foreach($symptoms as $symptom)
 					echo '<button class="symptom" data-symptom_id="',htmlentities($symptom->column_name),'">',htmlentities($symptom->name),'</button>';
 			?>
@@ -331,6 +147,7 @@ $symptoms=symptoms::get();
 				'use strict';
 				$('#panel_symptoms').on('open',function(){
 					$(this).show();
+					//we randomize the order of the symptoms to reduce polling bias
 					var symptoms_element=$('#symptoms');
 					var symptom_elements=$('#symptoms_holder>*');
 					while(symptom_elements.length>0){
@@ -339,8 +156,10 @@ $symptoms=symptoms::get();
 						symptoms_element.append(element);
 					}
 					$(window,this).resize(function(){
-						var wanted_width=200;
-						symptoms_element.css('column-count',Math.max(1,Math.round(symptoms_element.width()/wanted_width)));
+						if($('#panel_symptoms:visible').length){
+							var wanted_width=200;
+							symptoms_element.css('column-count',Math.max(1,Math.round(symptoms_element.width()/wanted_width)));
+						}
 					});
 					$(this).resize();
 					slide_in_panel(this);
@@ -353,6 +172,14 @@ $symptoms=symptoms::get();
 				$('#symptoms_done').click(function(){
 					$('#panel_location').trigger('open');
 				});
+
+				function symptoms_data(){
+					var data={};
+					$('button.symptom.selected').each(function(){
+						data[this.dataset.symptom_id]=1;
+					});
+					return data;
+				}
 			</script>
 		</div>
 		<div class="popup" id="zip_popup" style="display:none">
@@ -380,8 +207,18 @@ $symptoms=symptoms::get();
 				});
 				
 				$('#zip_popup button').click(function(){
-					submit_zip();
 					$('#zip_popup').fadeOut(250);
+					waiting_popup_show();
+					var zip=$('#zip_popup_value').val();
+
+					var data={};
+					data.zip=zip;
+					data.symptoms=symptoms_data();
+					submit(data,'submit_zip',function(){
+						waiting_popup_hide(function(){
+							$('#panel_finished').trigger('open');
+						});
+					});
 				});
 
 				$('#zip_popup .close').click(function(){
@@ -392,8 +229,8 @@ $symptoms=symptoms::get();
 		<div class="panel" id="panel_location">
 			<h1>Let us know the area where you where you live</h1>
 			<h2>We don't want your address just the general area</h2>
-			<button class="major" id="use_zip">Enter Zip Code</button>
 			<button class="major" id="use_geolocation">Use My Location</button>
+			<button class="major" id="use_zip">Enter Zip Code</button>
 			<script>
 				'use strict';
 				$('#panel_location').on('open',function(){
@@ -416,24 +253,75 @@ $symptoms=symptoms::get();
 				});
 				
 				$('#use_geolocation').click(function(){
-					function success(position) {
-						console.log(position);
+					function success(geolocation) {
+						var data={};
+						data.latitude=geolocation.coords.latitude;
+						data.longitude=geolocation.coords.longitude;
+						data.accuracy=geolocation.coords.accuracy;
+						data.symptoms=symptoms_data();
+						submit(data,'submit_geolocation',function(){
+							waiting_popup_hide(function(){
+								$('#panel_finished').trigger('open');
+							});
+						});
 					}				
 					function error(error){
-						console.log(error);
+						waiting_popup_hide();
 						if(error.code==1){
-							popup("If you would rather not use your device location we get that. But to understand where people are getting sick we do need a general location for you. Please enter a zip code to continue");
+							popup("If you would rather not use your device location we get that. But to understand where people are sick we do need a general location for you. Please enter a zip code to continue");
 							$('#use_geolocation').hide();
 						}else{
+							console.log(error);
 							popup("There was an error getting your location. Please choose one of the other available options");
 							$('#use_geolocation').hide();
 						}
 					}
+					waiting_popup_show();
 					navigator.geolocation.getCurrentPosition(success,error);
-					//$('#panel_location').hide();
-					//$('#panel_symptoms').trigger('open');
 				});
 			</script>
 		</div>
+		<div class="panel" id="panel_finished">
+			<h1>Thank You</h1>
+			<h2>If you'd like to check out the data we've collected hit the button below</h2>
+			<a class="button" href="graphs.php">
+				<svg width="100" height="100">
+					<polyline points="0,80 20,20 40,70 60,30 80,60 100,40" style="fill:none;stroke:#EEE;stroke-width:3" />
+					<line x1="0" y1="0" x2="0" y2="100" style="stroke:hsl(206,62%,60%);stroke-width:8" />				
+					<line x1="0" y1="100" x2="100" y2="100" style="stroke:hsl(206,62%,60%);stroke-width:8" />				
+				</svg>
+			</a>
+			<script>
+				'use strict';
+				$('#panel_finished').on('open',function(){
+					slide_in_panel(this);
+				});
+			</script>
+		</div>
+<?php else:?>
+		<script>
+			'use strict';
+			$(function(){
+				$('#panel_already_submitted').fadeIn(250);
+			});
+		</script>
+		<div class="panel" id="panel_already_submitted">
+			<h1>It looks like you've already reported today</h1>
+			<h2>We only take self reporting once per day. Please let us know how you feel tomorrow. If you'd like to check out the data we've collected hit the button below</h2>
+			<a class="button" href="graphs.php">
+				<svg width="100" height="100">
+					<polyline points="0,80 20,20 40,70 60,30 80,60 100,40" style="fill:none;stroke:#EEE;stroke-width:3" />
+					<line x1="0" y1="0" x2="0" y2="100" style="stroke:hsl(206,62%,60%);stroke-width:8" />				
+					<line x1="0" y1="100" x2="100" y2="100" style="stroke:hsl(206,62%,60%);stroke-width:8" />				
+				</svg>
+			</a>
+			<script>
+				'use strict';
+				$('#panel_already_submitted').on('open',function(){
+					slide_in_panel(this);
+				});
+			</script>
+		</div>
+<?php endif;?>
 	</body>
 </html>
