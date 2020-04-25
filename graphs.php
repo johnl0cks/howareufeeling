@@ -159,7 +159,9 @@ if($location->city){
 				build_graph(default_graph_data);
 			});
 		</script>
-
+<?php if($_GET['fake']??false):?>
+	<div style="color: white;text-align: center;font-size: 150%;">You are in fake data mode!</div>
+<?php endif;?>
 		<div>
 			Date Range <input type="text" class="datepicker" id="date_begin" value="<?php echo htmlentities($date_begin);?>"/>
 			to <input type="text" class="datepicker" id="date_end" value="<?php echo htmlentities($date_end);?>"/>
