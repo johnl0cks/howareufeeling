@@ -3,7 +3,7 @@ require_once(dirname(__FILE__).'/models/feels.php');
 $already_submitted=feels::ip_already_submitted_today($_SERVER['REMOTE_ADDR']);
 ?><html>
 	<head>
-		<title>how are u feeling?</title>
+		<title>who else is sick?</title>
 		<link rel="stylesheet" type="text/css" href="css/index.css">
 		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
 	</head>
@@ -31,15 +31,13 @@ $already_submitted=feels::ip_already_submitted_today($_SERVER['REMOTE_ADDR']);
 			}
 			
 			function submit(data,type,complete){
-				console.log(data);
 				var settings={
-					url:'ajax/feels.php/'+type,
+					url:'ajax/feels.php/'+type<?php if($_GET['fake']??false) echo '+"?fake=1"';?>,
 					data: JSON.stringify(data),
 					dataType: 'json',
 					method:'POST',
 					processData:false,
 					complete: complete
-					
 				}
 				//setTimeout(function(){$.ajax(settings);},1000);
 				$.ajax(settings);
@@ -84,9 +82,16 @@ $already_submitted=feels::ip_already_submitted_today($_SERVER['REMOTE_ADDR']);
 				}
 			</script>
 		</div>
+		<button id="privacy_statement">Privacy?</button>
+		<script>
+			'use strict';
+			$('#privacy_statement').click(function(){
+				popup('The purpose of "who else is sick?" is to collect anonymous numbers not information on individual people. We don’t care who you are and we don’t want to know. To that end we only record what you tell us. Whether you feel good or bad, any symptoms you selected and a general location derived from your IP address. That location is in the best case accurate to the zipcode. We do not even record your IP address, we record a hashed version of your IP address. Which is kind of one way scramble. We use this to make sure we only get one report a day per IP address but we can’t convert it back to an IP address.');
+			});
+		</script>
 		<div class="panel" id="panel_feel">
-			<h1>how are u feeling?</h1>
-			<h2>Help track disease and learn about its spread</h2>
+			<h1>who else is sick?</h1>
+			<h2>Let us know how your feeling and we can use your answers to track the spread of disease. And you too can see what's going on if you help out.</h2>
 			<div id="feels">
 				<button class="feel" id="feeling_good">Good</button>
 				<button class="feel" id="feeling_bad">Bad</button>
@@ -191,7 +196,7 @@ $already_submitted=feels::ip_already_submitted_today($_SERVER['REMOTE_ADDR']);
 		<div class="panel" id="panel_finished">
 			<h1>Thank You</h1>
 			<h2>If you'd like to check out the data we've collected hit the button below</h2>
-			<a class="button" href="graphs.php">
+			<a class="button" href="graphs.php<?php if($_GET['fake']??false) echo '?fake=1';?>">
 				<svg width="100" height="100">
 					<polyline points="0,80 20,20 40,70 60,30 80,60 100,40" style="fill:none;stroke:#EEE;stroke-width:3" />
 					<line x1="0" y1="0" x2="0" y2="100" style="stroke:hsl(206,62%,60%);stroke-width:8" />				
@@ -215,7 +220,7 @@ $already_submitted=feels::ip_already_submitted_today($_SERVER['REMOTE_ADDR']);
 		<div class="panel" id="panel_already_submitted">
 			<h1>It looks like you've already reported today</h1>
 			<h2>We only take self reporting once per day. Please let us know how you feel tomorrow. If you'd like to check out the data we've collected hit the button below</h2>
-			<a class="button" href="graphs.php">
+			<a class="button" href="graphs.php<?php if($_GET['fake']??false) echo '?fake=1';?>">
 				<svg width="100" height="100">
 					<polyline points="0,80 20,20 40,70 60,30 80,60 100,40" style="fill:none;stroke:#EEE;stroke-width:3" />
 					<line x1="0" y1="0" x2="0" y2="100" style="stroke:hsl(206,62%,60%);stroke-width:8" />				

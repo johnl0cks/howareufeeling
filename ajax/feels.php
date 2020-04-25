@@ -18,6 +18,17 @@ class controller extends controller_base{
 		if($loc)
 			feels::insert($ip,false,$loc,$symptoms);
 	}
+	
+	public static function get_graph(){
+		$date_begin=self::param('string','date_begin');
+		$date_end=self::param('string','date_end');
+		$line_describers=self::param('array','line_describers');
+
+		$ip=$_SERVER['REMOTE_ADDR'];
+		if(!feels::ip_already_submitted_today($ip))
+			return null;
+		return feels::get_graph($date_begin,$date_end,$line_describers);
+	}
 };
 
 controller::run_action();

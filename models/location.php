@@ -7,7 +7,7 @@ require_once(dirname(__FILE__).'/../config/config.php');
 class location{
 	public static $earth_radius=6378.1;//in kilometers
 
-	private static function longitude_and_latitude_to_sphere_coords($loc){
+	public static function longitude_and_latitude_to_sphere_coords($loc){
 		//finds the 3 dimensional coorindates of the lat and long if the center of the earth is 0,0,0
 		//used for finding closeness to other points
 		$longitude=deg2rad($loc->longitude);
@@ -22,11 +22,15 @@ class location{
 	}
 
 	public static function location_id(string $country,string $state_prov,string $city,string $zipcode,string $district){
-		$found=database::select_first('select location_id from locations where country=? and state_prov=? and city=? and zipcode=? and district=?',$country,$state_prov,$city,$zipcode,$district);
+		$found=database::select_first('select location_id from locations where country=? and state_prov=? and city=? and zipcode=? and district=? limit 1',$country,$state_prov,$city,$zipcode,$district);
 		if($found)
 			return $found->location_id;
 		database::execute('insert into locations (country,state_prov,city,zipcode,district) values(?,?,?,?,?)',$country,$state_prov,$city,$zipcode,$district);
 		return database::last_insert_id();
+	}
+	
+	public static function location_from_id($id){
+		return database::select_first('select * from locations where location_id=?',$id);
 	}
 	
 	public static function from_ip_cached(string $ip_hash){
@@ -78,5 +82,37 @@ class location{
 			}
 		}
 		return false;
+	}
+
+	public static function countries(){
+		database::push_fetch_type([PDO::FETCH_COLUMN,0]);
+		//$rows=database::select_all('select country from locations group by country order by country');
+		$rows=database::select_all('select distinct country from locations order by country');
+		database::pop_fetch_type([PDO::FETCH_COLUMN,1]);
+		return $rows;
+	}
+
+	public static function state_provs(string $country){
+		database::push_fetch_type([PDO::FETCH_COLUMN,0]);
+		//$rows=database::select_all('select state_prov from locations where country=? group by state_prov order by state_prov',$country);
+		$rows=database::select_all('select distinct state_prov country from locations where country=? order by state_prov',$country);
+		database::pop_fetch_type([PDO::FETCH_COLUMN,1]);
+		return $rows;
+	}
+
+	public static function cities(string $country,string $state_prov){
+		database::push_fetch_type([PDO::FETCH_COLUMN,0]);
+		//$rows=database::select_all('select city from locations where state_prov=? group by city order by city',$state_prov);
+		$rows=database::select_all('select distinct city country from locations where country=? and state_prov=? order by city',$country,$state_prov);
+		database::pop_fetch_type([PDO::FETCH_COLUMN,1]);
+		return $rows;
+	}
+
+	public static function zipcodes(string $country,string $state_prov){
+		database::push_fetch_type([PDO::FETCH_COLUMN,0]);
+		//$rows=database::select_all('select zipcode from locations where country=? group by zipcode order by zipcode',$country);
+		$rows=database::select_all('select distinct zipcode from locations where country=? and state_prov=? order by zipcode',$country,$state_prov);
+		database::pop_fetch_type([PDO::FETCH_COLUMN,1]);
+		return $rows;
 	}
 };

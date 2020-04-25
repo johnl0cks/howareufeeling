@@ -62,7 +62,7 @@ symptoms::$symptoms=array (
   (object) array(
      'symptom_id' => '11',
      'name' => 'Muscle aches',
-     'column_name' => 'muscel_aches',
+     'column_name' => 'muscle_aches',
   ),
   10 => 
   (object) array(
@@ -80,7 +80,7 @@ symptoms::$symptoms=array (
   (object) array(
      'symptom_id' => '14',
      'name' => 'Muscle soreness',
-     'column_name' => 'mucle_soreness',
+     'column_name' => 'muscle_soreness',
   ),
   13 => 
   (object) array(
@@ -225,10 +225,10 @@ symptoms::$symptom_map=array (
   'runny_nose' => 6,
   'loss_of_smell_or_taste' => 7,
   'chills' => 8,
-  'muscel_aches' => 9,
+  'muscle_aches' => 9,
   'joint_aches' => 10,
   'joint_soreness' => 11,
-  'mucle_soreness' => 12,
+  'muscle_soreness' => 12,
   'headaches' => 13,
   'loss_of_appetite' => 14,
   'increase_in_appetite' => 15,

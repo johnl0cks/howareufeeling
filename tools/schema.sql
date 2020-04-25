@@ -32,8 +32,8 @@ CREATE TABLE `feels` (
 	`symptom_leg_cramps` tinyint(1) NOT NULL DEFAULT '0',
 	`symptom_loss_of_appetite` tinyint(1) NOT NULL DEFAULT '0',
 	`symptom_loss_of_smell_or_taste` tinyint(1) NOT NULL DEFAULT '0',
-	`symptom_mucle_soreness` tinyint(1) NOT NULL DEFAULT '0',
-	`symptom_muscel_aches` tinyint(1) NOT NULL DEFAULT '0',
+	`symptom_muscle_soreness` tinyint(1) NOT NULL DEFAULT '0',
+	`symptom_muscle_aches` tinyint(1) NOT NULL DEFAULT '0',
 	`symptom_nosebleed` tinyint(1) NOT NULL DEFAULT '0',
 	`symptom_runny_nose` tinyint(1) NOT NULL DEFAULT '0',
 	`symptom_sensitivity_to_light` tinyint(1) NOT NULL DEFAULT '0',
@@ -45,7 +45,7 @@ CREATE TABLE `feels` (
 	`symptom_tiredness` tinyint(1) NOT NULL DEFAULT '0',
 	`symptom_wet_cough` tinyint(1) NOT NULL DEFAULT '0',
 	PRIMARY KEY (`feel_id`),
-	UNIQUE KEY `ip_hash` (`ip_hash`);
+	UNIQUE KEY `ip_hash` (`ip_hash`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 CREATE TABLE `locations` (
@@ -55,7 +55,7 @@ CREATE TABLE `locations` (
 	`city` text COLLATE utf8_unicode_ci NOT NULL,
 	`zipcode` text COLLATE utf8_unicode_ci NOT NULL,
 	`district` text COLLATE utf8_unicode_ci NOT NULL,
-	PRIMARY KEY (`location_id`);
+	PRIMARY KEY (`location_id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 CREATE TABLE `location_cache` (
@@ -69,6 +69,6 @@ CREATE TABLE `location_cache` (
 	`sphere_z` float NOT NULL,
 	`location_id` int(10) UNSIGNED NOT NULL,
 	PRIMARY KEY (`id`),
-	UNIQUE KEY `ip_hash` (`ip_hash`);
+	UNIQUE KEY `ip_hash` (`ip_hash`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
